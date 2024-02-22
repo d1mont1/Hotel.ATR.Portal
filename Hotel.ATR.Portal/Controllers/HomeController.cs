@@ -1,4 +1,5 @@
 ﻿using Hotel.ATR.Portal.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,9 +43,13 @@ namespace Hotel.ATR.Portal.Controllers
 
         public IActionResult Index()
         {
-            var data = Request.Cookies["IIN"];
+            HttpContext.Session.SetString("product", "Auto");
 
-            var data2 = _context.HttpContext.Request.Cookies["IIN"];
+            string value = HttpContext.Session.GetString("product");
+
+            //var data = Request.Cookies["IIN"];
+
+            //var data2 = _context.HttpContext.Request.Cookies["IIN"];
 
 
             _logger.LogInformation("TestInfo");
@@ -55,7 +60,13 @@ namespace Hotel.ATR.Portal.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Login()
         {
             return View();
         }
