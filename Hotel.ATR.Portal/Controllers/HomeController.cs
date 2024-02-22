@@ -1,6 +1,7 @@
 ﻿using Hotel.ATR.Portal.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nest;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,16 +13,20 @@ namespace Hotel.ATR.Portal.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IRepository _repo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IRepository repo)
         {
             _logger = logger;
+            _repo = repo;
         }
 
 
         public IActionResult AboutUs()
         {
-            return View();
+            var data = _repo.Products();
+            return View(data);
+
         }
 
         public IActionResult Index()
