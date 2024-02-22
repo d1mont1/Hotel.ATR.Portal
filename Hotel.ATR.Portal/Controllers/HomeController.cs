@@ -1,4 +1,5 @@
 ﻿using Hotel.ATR.Portal.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nest;
@@ -14,23 +15,38 @@ namespace Hotel.ATR.Portal.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRepository _repo;
+        private readonly IHttpContextAccessor _context;
 
-        public HomeController(ILogger<HomeController> logger, IRepository repo)
+        public HomeController(ILogger<HomeController> logger, IRepository repo, IHttpContextAccessor context)
         {
             _logger = logger;
             _repo = repo;
+            _context = context;
         }
 
 
         public IActionResult AboutUs()
         {
-            var data = _repo.Products();
-            return View(data);
+            string key = "IIN";
+            string value = "88005553535";
 
+            CookieOptions options = new CookieOptions();
+            options.Expires = DateTime.Now.AddDays(1);
+
+            Response.Cookies.Append(key,value);
+            Response.Cookies.Append(key,value);
+            Response.Cookies.Append(key,value);
+
+            return View();
         }
 
         public IActionResult Index()
         {
+            var data = Request.Cookies["IIN"];
+
+            var data2 = _context.HttpContext.Request.Cookies["IIN"];
+
+
             _logger.LogInformation("TestInfo");
             _logger.LogError("TestInfo");
 
