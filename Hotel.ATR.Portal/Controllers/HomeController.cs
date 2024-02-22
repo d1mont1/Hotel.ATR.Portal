@@ -1,4 +1,6 @@
 ﻿using Hotel.ATR.Portal.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Hotel.ATR.Portal.Controllers
@@ -66,8 +69,29 @@ namespace Hotel.ATR.Portal.Controllers
             return View();
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
+            ViewBag.ReturnUrl = ReturnUrl;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(string username, string password, string ReturnUrl)
+        {
+            if ((username == "admin") && (password == "admin"))
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, username),
+                };
+                var claimsIdentity = new ClaimsIdentity(claims, "Login");
+
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                return Redirect(ReturnUrl);
+            }
+
             return View();
         }
 
